@@ -1,0 +1,86 @@
+[gd_scene load_steps=6 format=3 uid="uid://76sja71fjsp2"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_oyd4n"]
+[ext_resource type="ArrayMesh" uid="uid://c6t4k3omgds31" path="res://Assets/Models/arrow.res" id="2_8er4n"]
+[ext_resource type="Script" path="res://UI.gd" id="2_cpo05"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_kdx6p"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8epwk"]
+radius = 0.1
+
+[node name="Player" type="CharacterBody3D"]
+motion_mode = 1
+script = ExtResource("1_oyd4n")
+
+[node name="Arrow" type="MeshInstance3D" parent="."]
+top_level = true
+mesh = ExtResource("2_8er4n")
+
+[node name="CameraController" type="Node3D" parent="."]
+top_level = true
+
+[node name="TwistPivot" type="Node3D" parent="CameraController"]
+
+[node name="PitchPivot" type="Node3D" parent="CameraController/TwistPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraController/TwistPivot/PitchPivot"]
+collision_mask = 0
+spring_length = 5.0
+margin = 0.1
+
+[node name="Camera3D" type="Camera3D" parent="CameraController/TwistPivot/PitchPivot/SpringArm3D"]
+fov = 90.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_kdx6p")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_8epwk")
+disabled = true
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_cpo05")
+
+[node name="GridContainer" type="GridContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -92.0
+offset_right = 92.0
+offset_bottom = 40.0
+grow_horizontal = 2
+columns = 3
+
+[node name="SaveButton" type="Button" parent="UI/GridContainer"]
+layout_mode = 2
+text = "Save Data"
+
+[node name="VSeparator" type="VSeparator" parent="UI/GridContainer"]
+layout_mode = 2
+
+[node name="LoadButton" type="Button" parent="UI/GridContainer"]
+layout_mode = 2
+text = "Load Data"
+
+[node name="LineEdit" type="LineEdit" parent="UI"]
+layout_mode = 2
+offset_left = 484.0
+offset_top = 40.0
+offset_right = 670.0
+offset_bottom = 71.0
+
+[connection signal="pressed" from="UI/GridContainer/SaveButton" to="UI" method="_on_save_button_pressed"]
+[connection signal="pressed" from="UI/GridContainer/LoadButton" to="UI" method="_on_load_button_pressed"]
+[connection signal="focus_entered" from="UI/LineEdit" to="." method="_on_line_edit_focus_entered"]
+[connection signal="focus_exited" from="UI/LineEdit" to="." method="_on_line_edit_focus_exited"]
