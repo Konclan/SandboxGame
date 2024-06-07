@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://76sja71fjsp2"]
+[gd_scene load_steps=7 format=3 uid="uid://76sja71fjsp2"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_oyd4n"]
+[ext_resource type="Script" path="res://player_interaction.gd" id="2_4pyb3"]
 [ext_resource type="ArrayMesh" uid="uid://c6t4k3omgds31" path="res://Assets/Models/arrow.res" id="2_8er4n"]
-[ext_resource type="Script" path="res://UI.gd" id="2_cpo05"]
+[ext_resource type="Script" path="res://interface.gd" id="3_cy3yk"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_kdx6p"]
 radius = 0.1
@@ -15,10 +16,14 @@ radius = 0.1
 motion_mode = 1
 script = ExtResource("1_oyd4n")
 
-[node name="Arrow" type="Node3D" parent="."]
+[node name="PlayerInteraction" type="Node3D" parent="."]
+script = ExtResource("2_4pyb3")
+
+[node name="Pointer" type="Node3D" parent="."]
 top_level = true
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Arrow"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pointer"]
+cast_shadow = 0
 mesh = ExtResource("2_8er4n")
 skeleton = NodePath("../..")
 
@@ -39,44 +44,56 @@ margin = 0.1
 fov = 90.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+cast_shadow = 0
 mesh = SubResource("SphereMesh_kdx6p")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_8epwk")
 disabled = true
 
-[node name="UI" type="Control" parent="."]
+[node name="Interface" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("2_cpo05")
+mouse_filter = 2
+script = ExtResource("3_cy3yk")
 
-[node name="GridContainer" type="GridContainer" parent="UI"]
+[node name="AreaTop" type="Control" parent="Interface"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -101.0
+offset_right = 101.0
+offset_bottom = 88.0
+grow_horizontal = 2
+
+[node name="GridContainer" type="GridContainer" parent="Interface/AreaTop"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -92.0
 offset_right = 92.0
-offset_bottom = 40.0
+offset_bottom = 31.0
 grow_horizontal = 2
 columns = 3
 
-[node name="SaveButton" type="Button" parent="UI/GridContainer"]
+[node name="SaveButton" type="Button" parent="Interface/AreaTop/GridContainer"]
 layout_mode = 2
 text = "Save Data"
 
-[node name="VSeparator" type="VSeparator" parent="UI/GridContainer"]
+[node name="VSeparator" type="VSeparator" parent="Interface/AreaTop/GridContainer"]
 layout_mode = 2
 
-[node name="LoadButton" type="Button" parent="UI/GridContainer"]
+[node name="LoadButton" type="Button" parent="Interface/AreaTop/GridContainer"]
 layout_mode = 2
 text = "Load Data"
 
-[node name="LineEdit" type="LineEdit" parent="UI"]
+[node name="LineEdit" type="LineEdit" parent="Interface/AreaTop"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -87,13 +104,58 @@ offset_right = 93.0
 offset_bottom = 71.0
 grow_horizontal = 2
 
-[node name="debug_text" type="RichTextLabel" parent="UI"]
-layout_mode = 0
-offset_right = 439.0
-offset_bottom = 220.0
-text = "help"
+[node name="AreaBottom" type="Control" parent="Interface"]
+custom_minimum_size = Vector2(23, 107)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -113.0
+offset_top = -107.0
+offset_right = 113.0
+grow_horizontal = 2
+grow_vertical = 0
 
-[connection signal="pressed" from="UI/GridContainer/SaveButton" to="UI" method="_on_save_button_pressed"]
-[connection signal="pressed" from="UI/GridContainer/LoadButton" to="UI" method="_on_load_button_pressed"]
-[connection signal="focus_entered" from="UI/LineEdit" to="." method="_on_line_edit_focus_entered"]
-[connection signal="focus_exited" from="UI/LineEdit" to="." method="_on_line_edit_focus_exited"]
+[node name="ToolsContainer" type="GridContainer" parent="Interface/AreaBottom"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -106.0
+offset_top = -100.0
+offset_right = 106.0
+grow_horizontal = 2
+grow_vertical = 0
+columns = 3
+
+[node name="ToolBlock" type="Button" parent="Interface/AreaBottom/ToolsContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "BLOCK"
+clip_text = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="VSeparator" type="VSeparator" parent="Interface/AreaBottom/ToolsContainer"]
+layout_mode = 2
+
+[node name="ToolFace" type="Button" parent="Interface/AreaBottom/ToolsContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "FACE"
+clip_text = true
+icon_alignment = 1
+expand_icon = true
+
+[connection signal="pressed" from="Interface/AreaTop/GridContainer/SaveButton" to="Interface" method="_on_save_button_pressed"]
+[connection signal="pressed" from="Interface/AreaTop/GridContainer/LoadButton" to="Interface" method="_on_load_button_pressed"]
+[connection signal="focus_entered" from="Interface/AreaTop/LineEdit" to="." method="_on_line_edit_focus_entered"]
+[connection signal="focus_exited" from="Interface/AreaTop/LineEdit" to="." method="_on_line_edit_focus_exited"]
+[connection signal="pressed" from="Interface/AreaBottom/ToolsContainer/ToolBlock" to="PlayerInteraction" method="_on_tool_block_pressed"]
+[connection signal="pressed" from="Interface/AreaBottom/ToolsContainer/ToolFace" to="PlayerInteraction" method="_on_tool_face_pressed"]

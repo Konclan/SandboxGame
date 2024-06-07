@@ -1,7 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://dwegml4v5p4vy"]
+[gd_scene load_steps=6 format=3 uid="uid://dwegml4v5p4vy"]
 
 [ext_resource type="PackedScene" uid="uid://76sja71fjsp2" path="res://player.tscn" id="1_pmneb"]
-[ext_resource type="PackedScene" uid="uid://cfsxeoyq6xih7" path="res://Voxels/Blocks/block.tscn" id="2_55sfc"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vljmq"]
 
@@ -26,13 +25,9 @@ shadow_enabled = true
 [node name="Player" parent="." instance=ExtResource("1_pmneb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3)
 
-[node name="Boxes" type="Node" parent="."]
-
 [node name="Voxels" type="Node" parent="."]
 
 [node name="Blocks" type="Node" parent="Voxels"]
-
-[node name="Block" parent="Voxels/Blocks" instance=ExtResource("2_55sfc")]
 
 [node name="Panels" type="Node" parent="Voxels"]
 
