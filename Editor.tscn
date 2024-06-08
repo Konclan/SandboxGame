@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://dwegml4v5p4vy"]
+[gd_scene load_steps=7 format=3 uid="uid://dwegml4v5p4vy"]
 
 [ext_resource type="PackedScene" uid="uid://76sja71fjsp2" path="res://player.tscn" id="1_pmneb"]
+[ext_resource type="Script" path="res://Voxels/voxels.gd" id="2_2pc3f"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vljmq"]
 
@@ -25,7 +26,8 @@ shadow_enabled = true
 [node name="Player" parent="." instance=ExtResource("1_pmneb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3)
 
-[node name="Voxels" type="Node" parent="."]
+[node name="Voxels" type="Node3D" parent="."]
+script = ExtResource("2_2pc3f")
 
 [node name="Blocks" type="Node" parent="Voxels"]
 
@@ -34,6 +36,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3)
 [node name="Panes" type="Node" parent="Voxels"]
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("WorldBoundaryShape3D_pwd5p")

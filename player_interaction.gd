@@ -1,15 +1,16 @@
 extends Node3D
 class_name PlayerInteraction
 
-const GRID_SIZE = 1
-const GRID = Vector3(GRID_SIZE, GRID_SIZE, GRID_SIZE)
-const BLOCK = preload("res://Voxels/Blocks/block.tscn")
 const RANGE = 20
 
 @onready var scene = get_tree().current_scene
-@onready var blocks = get_node("../../Voxels/Blocks")
 @onready var pointer = get_node("../Pointer")
 @onready var interface = get_node("../Interface")
+@onready var voxels = get_node("../../Voxels")
+
+var brick_texture = load("res://Assets/Textures/brick.png")
+var concrete_texture = load("res://Assets/Textures/concrete_floor.png")
+var default_texture = load("res://Assets/Textures/default_arrows.png")
 
 var tool := String("")
 
@@ -47,47 +48,20 @@ func primary_action(cast):
 	if cast:
 		match tool:
 			"ToolBlock":
-				var pos = (cast.position + ((cast.normal * GRID_SIZE) * 0.6)).snapped(GRID)
-				if is_empty(pos):
-					place_block(pos)
+				voxels.block_tool_place(cast)
 			"ToolFace":
-				set_face_color(cast, Color.BLACK)
+				#voxels.face_tool_color(cast, Color.BLACK)
+				voxels.face_tool_texture(cast, brick_texture)
 
 
 func secondary_action(cast):
 	if cast:
 		match tool:
 			"ToolBlock":
-				var object = cast.collider
-				remove_block(object)
+				voxels.block_tool_remove(cast)
 			"ToolFace":
-				set_face_color(cast, Color.WHITE)
-
-func place_block(pos):
-	var block_new = BLOCK.instantiate()
-	block_new.position = pos
-	blocks.add_child(block_new)
-
-func remove_block(block):
-	if block is VoxelBlock:
-		block.queue_free()
-
-func set_face_color(cast, color):
-	if cast.collider is VoxelBlock:
-		cast.collider.modify_voxel(color)
-
-func is_empty(pos):
-	var point_query = PhysicsPointQueryParameters3D.new()
-	var space = get_world_3d().direct_space_state
-	point_query.position = pos
-	point_query.collide_with_areas = false
-	point_query.collide_with_bodies = true
-	point_query.exclude = [self]
-	var result = space.intersect_point(point_query)
-	if is_instance_valid(result):
-		return result is VoxelBlock
-	else:
-		return true
+				#voxels.face_tool_color(cast, Color.WHITE)
+				voxels.face_tool_texture(cast, concrete_texture)
 
 func get_cursor_pos_3d():
 	if interface.moused:

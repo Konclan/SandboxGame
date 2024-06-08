@@ -17,7 +17,7 @@ func _ready():
 	for item in ui_items:
 		item.connect('mouse_entered', mouse_entered)
 		item.connect('mouse_exited', mouse_exited)
-
+	
 func mouse_over_ui():
 	return moused
 
