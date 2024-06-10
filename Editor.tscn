@@ -36,38 +36,6 @@ script = ExtResource("2_2pc3f")
 
 [node name="Panes" type="Node" parent="Voxels"]
 
-[node name="Block" parent="Voxels" instance=ExtResource("3_c030k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -3)
-visible = false
-
-[node name="Block2" parent="Voxels" instance=ExtResource("3_c030k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
-visible = false
-
-[node name="Block3" parent="Voxels" instance=ExtResource("3_c030k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
-visible = false
-
-[node name="Block4" parent="Voxels" instance=ExtResource("3_c030k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -4)
-visible = false
-
-[node name="Block5" parent="Voxels" instance=ExtResource("3_c030k")]
-transform = Transform3D(0.999998, -0.00188149, -0.000764616, 0.00188235, 0.999998, 0.00112344, 0.00076251, -0.00112487, 0.999999, 1.00038, 1.00038, -3.99962)
-visible = false
-
-[node name="Block6" parent="Voxels" instance=ExtResource("3_c030k")]
-transform = Transform3D(0.999998, -0.00188149, -0.000764616, 0.00188235, 0.999998, 0.00112344, 0.00076251, -0.00112487, 0.999999, 0.999617, 1.0015, -2.99962)
-visible = false
-
-[node name="Block7" parent="Voxels" instance=ExtResource("3_c030k")]
-transform = Transform3D(0.999998, -0.00188149, -0.000764616, 0.00188235, 0.999998, 0.00112344, 0.00076251, -0.00112487, 0.999999, -0.000381291, 0.999621, -3.00038)
-visible = false
-
-[node name="Block8" parent="Voxels" instance=ExtResource("3_c030k")]
-transform = Transform3D(0.999998, -0.00188149, -0.000764616, 0.00188235, 0.999998, 0.00112344, 0.00076251, -0.00112487, 0.999999, 0.000383317, 0.998497, -4.00038)
-visible = false
-
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 
