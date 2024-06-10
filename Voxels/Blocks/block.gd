@@ -8,7 +8,14 @@ var default_texture = load("res://Assets/Textures/default_arrows.png")
 var MeshInstance: MeshInstance3D
 var CollisionShape: CollisionShape3D
 
-var surfaces = {Vector3.MODEL_REAR: 5, Vector3.MODEL_LEFT: 1, Vector3.MODEL_FRONT: 3, Vector3.MODEL_RIGHT: 0, Vector3.MODEL_TOP: 4, Vector3.MODEL_BOTTOM: 2 }
+var surfaces = {
+	Vector3.MODEL_FRONT: 0,
+	Vector3.MODEL_REAR: 1,
+	Vector3.MODEL_RIGHT: 2,
+	Vector3.MODEL_LEFT: 3,
+	Vector3.MODEL_TOP: 4,
+	Vector3.MODEL_BOTTOM: 5
+}
 
 func _ready():
 	MeshInstance = MeshInstance3D.new()
@@ -20,24 +27,31 @@ func _ready():
 
 func create_voxel(texture):
 
-	# Define cube data	
-	var vertices = [
-		Vector3(-0.5, -0.5, 0.5), Vector3(-0.5, -0.5, -0.5), Vector3(0.5, -0.5, -0.5), Vector3(0.5, -0.5, 0.5),
-		Vector3(-0.5, 0.5, 0.5), Vector3(-0.5, 0.5, -0.5), Vector3(0.5, 0.5, 0.5), Vector3(0.5, 0.5, -0.5)
-	]
-	
-	var faces = [
-		[1, 5, 4, 0], [3, 6, 7, 2], [1, 0, 3, 2], [0, 4, 6, 3], [4, 5, 7, 6], [2, 7, 5, 1]
-	]
-	
+	# Define cube data
+	var vertices = {
+		"fbr": Vector3(-0.5, -0.5, 0.5),
+		"fbl": Vector3(0.5, -0.5, 0.5),
+		"rbr": Vector3(-0.5, -0.5, -0.5),
+		"rbl": Vector3(0.5, -0.5, -0.5),
+		"ftr": Vector3(-0.5, 0.5, 0.5),
+		"ftl": Vector3(0.5, 0.5, 0.5),
+		"rtr": Vector3(-0.5, 0.5, -0.5),
+		"rtl": Vector3(0.5, 0.5, -0.5)
+	}
+
+	var faces = {
+		Vector3.MODEL_FRONT: ["fbr", "ftr", "ftl", "fbl"],
+		Vector3.MODEL_REAR: ["rbl", "rtl", "rtr", "rbr"],
+		Vector3.MODEL_RIGHT: ["rbr", "rtr", "ftr", "fbr"],
+		Vector3.MODEL_LEFT: ["fbl", "ftl", "rtl", "rbl"],
+		Vector3.MODEL_TOP: ["rtl", "ftl", "ftr", "rtr"],
+		Vector3.MODEL_BOTTOM: ["rbr", "fbr", "fbl", "rbl"]
+	}
+
 	var uvs = [
 		Vector2(0, 0.25), Vector2(0, 0), Vector2(0.25, 0) , Vector2(0.25, 0.25)
 	]
 	
-	var normals = [
-		Vector3.MODEL_RIGHT, Vector3.MODEL_LEFT, Vector3.MODEL_BOTTOM, Vector3.MODEL_FRONT, Vector3.MODEL_TOP, Vector3.MODEL_REAR
-	]
-
 	# Create a new ArrayMesh and SurfaceTool
 	mesh = ArrayMesh.new()
 	var mesh_array = []
@@ -48,9 +62,6 @@ func create_voxel(texture):
 	material.texture_filter = 0
 	material.cull_mode = 0
 	material.vertex_color_use_as_albedo = true
-	
-	print(global_position)
-	print(fmod(global_position.x, 4), ", ", fmod(global_position.y, 4),", ", fmod(global_position.z, 4))
 
 	# Loop through each face
 	for i in range(faces.size()):
@@ -61,28 +72,23 @@ func create_voxel(texture):
 		# Add the vertices for this face
 		for j in range(4):
 			var uv: Vector2
-			match normals[i]:
+			match faces.keys()[i]:
 				Vector3.MODEL_FRONT:
 					uv = uvs[j] + (0.25 * Vector2(fmod(global_position.x, 4), -fmod(global_position.y+1, 4)))
-					#uv = Vector2(0, 0)
 				Vector3.MODEL_REAR:
 					uv = uvs[j] + (0.25 * Vector2(-fmod(global_position.x+1, 4), -fmod(global_position.y+1, 4)))
-					#uv = Vector2(0, 0)
 				Vector3.MODEL_RIGHT:
 					uv = uvs[j] + (0.25 * Vector2(fmod(global_position.z, 4), -fmod(global_position.y+1, 4)))
-					#uv = Vector2(0, 0)
 				Vector3.MODEL_LEFT:
 					uv = uvs[j] + (0.25 * Vector2(-fmod(global_position.z+1, 4), -fmod(global_position.y+1, 4)))
-					#uv = Vector2(0, 0)
 				Vector3.MODEL_TOP:
-					uv = uvs[j] + (0.25 * Vector2(fmod(global_position.x, 4), fmod(global_position.z, 4)))
-					#uv = Vector2(0, 0)
+					uv = uvs[j] + (0.25 * Vector2(-fmod(global_position.x+1, 4), -fmod(global_position.z+1, 4)))
 				Vector3.MODEL_BOTTOM:
 					uv = uvs[j] + (0.25 * Vector2(fmod(global_position.x, 4), -fmod(global_position.z+1, 4)))
-					#uv = Vector2(0, 0)
 
+			surface_tool.set_normal(faces.keys()[i])
 			surface_tool.set_uv(uv)
-			surface_tool.add_vertex(size*vertices[faces[i][j]])
+			surface_tool.add_vertex(size*vertices[faces.values()[i][j]])
 		# Add two triangles for this face
 		surface_tool.add_index(0)
 		surface_tool.add_index(1)
@@ -99,7 +105,7 @@ func create_voxel(texture):
 		#surface_tool.add_index(i*4 + 3)
 		
 		# Generate normals and tangents
-		surface_tool.generate_normals()
+		#surface_tool.generate_normals()
 		surface_tool.generate_tangents()
 	
 		mesh_array.append(surface_tool.commit_to_arrays())
@@ -114,19 +120,6 @@ func create_voxel(texture):
 	
 	for i in range(MeshInstance.mesh.get_surface_count()):
 		MeshInstance.set_surface_override_material(i, material)
-
-func modify_voxel_face_color(normal, color):
-	var mdt = MeshDataTool.new()
-	mdt.create_from_surface(mesh, 0)
-	for i in range(mdt.get_vertex_count()):
-		var vertex = mdt.get_vertex(i)
-		var vertex_normal = mdt.get_vertex_normal(i).snapped(Vector3(1, 1, 1))
-		if vertex_normal.is_equal_approx(normal):
-			mdt.set_vertex_color(i, color)
-		mdt.set_vertex(i, vertex)
-	mesh.clear_surfaces()
-	mdt.commit_to_surface(mesh)
-	MeshInstance.mesh = mesh
 
 func modify_voxel_face_material(normal, material):
 	print(surfaces[normal])

@@ -21,8 +21,10 @@ script = ExtResource("2_4pyb3")
 
 [node name="Pointer" type="Node3D" parent="."]
 top_level = true
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Pointer"]
+visible = false
 cast_shadow = 0
 mesh = ExtResource("2_8er4n")
 skeleton = NodePath("../..")
@@ -44,10 +46,12 @@ margin = 0.1
 fov = 90.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 cast_shadow = 0
 mesh = SubResource("SphereMesh_kdx6p")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+visible = false
 shape = SubResource("SphereShape3D_8epwk")
 disabled = true
 
@@ -60,6 +64,12 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("3_cy3yk")
+
+[node name="DebugText" type="RichTextLabel" parent="Interface"]
+layout_mode = 0
+offset_right = 398.0
+offset_bottom = 331.0
+text = "help"
 
 [node name="AreaTop" type="Control" parent="Interface"]
 layout_mode = 1

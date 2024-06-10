@@ -50,7 +50,6 @@ func primary_action(cast):
 			"ToolBlock":
 				voxels.block_tool_place(cast)
 			"ToolFace":
-				#voxels.face_tool_color(cast, Color.BLACK)
 				voxels.face_tool_texture(cast, brick_texture)
 
 
@@ -60,7 +59,6 @@ func secondary_action(cast):
 			"ToolBlock":
 				voxels.block_tool_remove(cast)
 			"ToolFace":
-				#voxels.face_tool_color(cast, Color.WHITE)
 				voxels.face_tool_texture(cast, concrete_texture)
 
 func get_cursor_pos_3d():

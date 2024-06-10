@@ -5,6 +5,8 @@ var save_path = "user://variable.save"
 var textbox_text := ""
 var moused := false
 
+@onready var debug_text = $DebugText
+
 @onready var textbox = $AreaTop/LineEdit
 @onready var button_save = $AreaTop/GridContainer/SaveButton
 @onready var button_load = $AreaTop/GridContainer/LoadButton
@@ -32,6 +34,8 @@ func mouse_exited():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	textbox_text = textbox.text
+	var viewport = get_viewport()
+	debug_text.text = str(viewport.get_render_info(Viewport.RENDER_INFO_TYPE_VISIBLE, Viewport.RENDER_INFO_PRIMITIVES_IN_FRAME))
 
 func save_data():
 	var file = FileAccess.open(save_path,FileAccess.WRITE)

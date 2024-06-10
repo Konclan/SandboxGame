@@ -14,9 +14,6 @@ func block_tool_place(trace):
 func block_tool_remove(trace):
 	var block = trace.collider
 	remove_block(block)
-
-func face_tool_color(trace, color):
-	set_face_color(trace, color)
 	
 func face_tool_texture(trace, texture):
 	set_face_texture(trace, texture)
@@ -25,14 +22,12 @@ func place_block(pos):
 	var block_new = VoxelBlock.new()
 	block_new.position = pos
 	Blocks.add_child(block_new)
+	optimize_voxels()
 
 func remove_block(block):
 	if block is VoxelBlock:
 		block.queue_free()
-
-func set_face_color(cast, color):
-	if cast.collider is VoxelBlock:
-		cast.collider.modify_voxel_face_color(cast.normal, color)
+	optimize_voxels()
 
 func set_face_texture(cast, texture):
 	if cast.collider is VoxelBlock:
@@ -55,3 +50,6 @@ func is_empty(pos):
 			if result.collider is VoxelBlock:
 				return false
 	return true
+
+func optimize_voxels():
+	pass
