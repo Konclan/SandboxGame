@@ -1,8 +1,8 @@
 extends Node
 
 @export var grid_size := 1
-@export var world_size := Vector3(64, 64, 64)
-const CHUNK_SIZE := Vector3(8.0, 8.0, 8.0)
+@export var world_size := Vector3(128, 128, 128)
+const CHUNK_SIZE := Vector3(16.0, 16.0, 16.0)
 
 var chunks_array = []
 

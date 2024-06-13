@@ -8,9 +8,9 @@ const RANGE = 20
 @onready var interface = get_node("../Interface")
 @onready var greedy_mesh = $"../../World/GreedyMesh"
 
-var brick_texture = load("res://Assets/Textures/brick.png")
-var concrete_texture = load("res://Assets/Textures/concrete_floor.png")
-var default_texture = load("res://Assets/Textures/default_arrows.png")
+var brick_texture = preload("res://Assets/Textures/brick.png")
+var concrete_texture = preload("res://Assets/Textures/concrete_floor.png")
+var default_texture = preload("res://Assets/Textures/default_arrows.png")
 
 var tool := String("")
 
@@ -48,7 +48,7 @@ func primary_action(cast):
 	if cast:
 		match tool:
 			"ToolBlock":
-				greedy_mesh.make_new_solid(cast.position)
+				greedy_mesh.make_new_solid(floor(cast.position + cast.normal/2))
 				#voxels.block_tool_place(cast)
 			"ToolFace":
 				pass
@@ -59,7 +59,7 @@ func secondary_action(cast):
 	if cast:
 		match tool:
 			"ToolBlock":
-				greedy_mesh.remove_solid(cast.position - cast.normal)
+				greedy_mesh.remove_solid(floor(cast.position - cast.normal/2))
 				#voxels.block_tool_remove(cast)
 			"ToolFace":
 				pass

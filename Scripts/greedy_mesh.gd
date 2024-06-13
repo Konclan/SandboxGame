@@ -6,14 +6,14 @@ extends Node3D
 const GREEDY_CUBE = preload("res://Assets/Materials/greedy_cube.gdshader")
 
 func make_solid(pos):
-	World.set_chunk_data(floor(pos).snapped(Vector3(grid_size, grid_size, grid_size)), 1)
+	World.set_chunk_data(pos.snapped(Vector3(grid_size, grid_size, grid_size)), 1)
 
 func make_new_solid(pos):
 	make_solid(pos)
 	greedy_mesh(World.get_chunk(pos))
 
 func remove_solid(pos):
-	World.set_chunk_data(floor(pos).snapped(Vector3(grid_size, grid_size, grid_size)), 0)
+	World.set_chunk_data(pos.snapped(Vector3(grid_size, grid_size, grid_size)), 0)
 	greedy_mesh(World.get_chunk(pos))
 
 #func def_cube(size, pos):
@@ -122,9 +122,22 @@ func greedy_mesh(chunk):
 					var blockCurrent: bool
 					var blockCompare: bool
 					
-					if pos[d] >= 0: blockCurrent = World.is_solid(global_pos + pos)
+					var pos_compare =  pos + q
+					
+					var bitboard_current: BitMap
+					var bit_pos_current: Vector2i
+					var bitboard_compare: BitMap
+					var bit_pos_compare: Vector2i
+					
+					if pos[d] >= 0:
+						bitboard_current = chunk.bitboards[pos.y]
+						bit_pos_current = Vector2i(pos.x, pos.z)
+						blockCurrent = bitboard_current.get_bit(bit_pos_current.x, bit_pos_current.y)
 					else: blockCurrent = false
-					if pos[d] < chunk_size[d] - 1: blockCompare = World.is_solid(global_pos + pos + q)
+					if pos[d] < chunk_size[d] - 1: 
+						bitboard_compare = chunk.bitboards[pos_compare.y] if pos_compare.y != pos.y || not bitboard_current else bitboard_current
+						bit_pos_compare = Vector2i(pos_compare.x, pos_compare.z)
+						blockCompare = bitboard_compare.get_bit(bit_pos_compare.x, bit_pos_compare.y)
 					else: blockCompare = false
 					
 					#print(pos[d] < chunk_size[d])
@@ -206,6 +219,9 @@ func greedy_mesh(chunk):
 						i += 1
 						n += 1
 
+	var MeshInstance = chunk.body.get_child(0)
+	var CollisionShape = chunk.body.get_child(1)
+	
 	if array_quads:
 		# Generate faces
 		var mesh = ArrayMesh.new()
@@ -223,12 +239,12 @@ func greedy_mesh(chunk):
 		surface_tool.generate_normals()
 		surface_tool.commit(mesh)
 		
-		var MeshInstance = chunk.body.get_child(0)
-		var CollisionShape = chunk.body.get_child(1)
-		
 		MeshInstance.mesh = mesh
 		#CollisionShape.make_convex_from_siblings
 		CollisionShape.shape = mesh.create_trimesh_shape()
 		var mat = ShaderMaterial.new()
 		mat.shader = GREEDY_CUBE
 		MeshInstance.set_surface_override_material(0, mat)
+	else:
+		MeshInstance.mesh = null
+		CollisionShape.shape = null
