@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://76sja71fjsp2" path="res://player.tscn" id="1_pmneb"]
 [ext_resource type="Material" uid="uid://c645hnp8wc4me" path="res://Assets/Materials/grid.tres" id="2_djfyb"]
-[ext_resource type="Script" path="res://World.gd" id="2_rycag"]
+[ext_resource type="Script" path="res://Scripts/world.gd" id="2_rycag"]
 [ext_resource type="Script" path="res://Scripts/greedy_mesh.gd" id="3_c8la0"]
 [ext_resource type="PackedScene" uid="uid://bv4dtmwukqcg6" path="res://cube_spawner.tscn" id="5_ro1me"]
 

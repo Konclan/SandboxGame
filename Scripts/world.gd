@@ -53,13 +53,6 @@ func define_chunks():
 				}
 				
 				chunks_array.append(chunk)
-	
-	#for chunk in chunks:
-		#var global_pos = chunk.pos * CHUNK_SIZE
-		#var draw = Draw3D.new()
-		#add_child(draw)
-#
-		#draw.cube(global_pos + (CHUNK_SIZE/2), Basis.IDENTITY.scaled(CHUNK_SIZE/2))
 
 func get_chunk(pos):
 	var chunk_pos = floor(pos/CHUNK_SIZE)
