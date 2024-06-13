@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c6jvo0beqcl1i"
-path="res://.godot/imported/plaster_ceiling.png-d975dfd5154fa67ec15619e76237cc7e.ctex"
+uid="uid://lufvlrfrh6pi"
+path="res://.godot/imported/grid.png-103f430ad21f66a217f51a7dc6be2299.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Textures/plaster_ceiling.png"
-dest_files=["res://.godot/imported/plaster_ceiling.png-d975dfd5154fa67ec15619e76237cc7e.ctex"]
+source_file="res://Assets/Textures/grid.png"
+dest_files=["res://.godot/imported/grid.png-103f430ad21f66a217f51a7dc6be2299.ctex"]
 
 [params]
 

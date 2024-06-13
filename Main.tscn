@@ -1,3 +1,77 @@
-[gd_scene format=3 uid="uid://dp6834easkvem"]
+[gd_scene load_steps=9 format=3 uid="uid://dp6834easkvem"]
+
+[ext_resource type="Script" path="res://Scripts/main_menu.gd" id="1_4rmro"]
+[ext_resource type="Texture2D" uid="uid://rpr4sx8qicvd" path="res://Assets/Textures/brick.png" id="2_6r64i"]
+[ext_resource type="Script" path="res://Scripts/background.gd" id="2_mp3vm"]
+[ext_resource type="Material" uid="uid://c645hnp8wc4me" path="res://Assets/Materials/grid.tres" id="4_lcsa0"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_2eode"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tgmmf"]
+albedo_texture = ExtResource("2_6r64i")
+uv1_scale = Vector3(2, 2, 2)
+texture_filter = 0
+
+[sub_resource type="Environment" id="Environment_b6bcf"]
+background_mode = 1
+background_color = Color(1, 1, 1, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.481789, 0.481789, 0.481789, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_6gekr"]
 
 [node name="Main" type="Node"]
+
+[node name="MainMenu" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4rmro")
+editor_scene = "res://Editor.tscn"
+
+[node name="Button" type="Button" parent="MainMenu"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -154.0
+offset_top = -127.0
+offset_right = 155.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 52
+text = "Load Editor"
+
+[node name="Background3D" type="Node" parent="MainMenu"]
+script = ExtResource("2_mp3vm")
+
+[node name="Node3D" type="Node3D" parent="MainMenu/Background3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MainMenu/Background3D/Node3D"]
+transform = Transform3D(0.707107, 0, -0.707107, -0.579228, 0.573576, -0.579228, 0.40558, 0.819153, 0.40558, 0, 0, 0)
+mesh = SubResource("BoxMesh_2eode")
+surface_material_override/0 = SubResource("StandardMaterial3D_tgmmf")
+
+[node name="Camera3D" type="Camera3D" parent="MainMenu/Background3D/Node3D"]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, -0.0428253, 0.538506, 2.17792)
+fov = 90.0
+size = 2.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="MainMenu/Background3D/Node3D"]
+transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 3, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="MainMenu/Background3D/Node3D"]
+environment = SubResource("Environment_b6bcf")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="MainMenu/Background3D/Node3D"]
+transform = Transform3D(200, 0, 0, 0, -8.74228e-06, 1, 0, -200, -4.37114e-08, 0, -1, -97)
+mesh = SubResource("QuadMesh_6gekr")
+surface_material_override/0 = ExtResource("4_lcsa0")
+
+[connection signal="pressed" from="MainMenu/Button" to="MainMenu" method="_on_button_pressed"]

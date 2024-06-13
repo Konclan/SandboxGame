@@ -7,6 +7,8 @@ var moused := false
 
 @onready var debug_text = $DebugText
 
+@onready var player_interaction = $"../PlayerInteraction"
+
 @onready var textbox = $AreaTop/LineEdit
 @onready var button_save = $AreaTop/GridContainer/SaveButton
 @onready var button_load = $AreaTop/GridContainer/LoadButton
@@ -32,7 +34,7 @@ func mouse_exited():
 	moused=false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	textbox_text = textbox.text
 	var viewport = get_viewport()
 	debug_text.text = str(viewport.get_render_info(Viewport.RENDER_INFO_TYPE_VISIBLE, Viewport.RENDER_INFO_PRIMITIVES_IN_FRAME))
@@ -56,3 +58,8 @@ func _on_save_button_pressed():
 func _on_load_button_pressed():
 	load_data()
 
+func _on_tool_block_pressed():
+	player_interaction.set_tool("ToolBlock")
+
+func _on_tool_face_pressed():
+	player_interaction.set_tool("ToolFace")

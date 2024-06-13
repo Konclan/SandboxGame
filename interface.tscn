@@ -1,0 +1,116 @@
+[gd_scene load_steps=2 format=3 uid="uid://cr60y1pxf3sue"]
+
+[ext_resource type="Script" path="res://Scripts/interface.gd" id="1_agtbr"]
+
+[node name="Interface" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_agtbr")
+
+[node name="DebugText" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_right = 398.0
+offset_bottom = 331.0
+text = "help"
+
+[node name="AreaTop" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -101.0
+offset_right = 101.0
+offset_bottom = 88.0
+grow_horizontal = 2
+
+[node name="GridContainer" type="GridContainer" parent="AreaTop"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -92.0
+offset_right = 92.0
+offset_bottom = 31.0
+grow_horizontal = 2
+columns = 3
+
+[node name="SaveButton" type="Button" parent="AreaTop/GridContainer"]
+layout_mode = 2
+text = "Save Data"
+
+[node name="VSeparator" type="VSeparator" parent="AreaTop/GridContainer"]
+layout_mode = 2
+
+[node name="LoadButton" type="Button" parent="AreaTop/GridContainer"]
+layout_mode = 2
+text = "Load Data"
+
+[node name="LineEdit" type="LineEdit" parent="AreaTop"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -93.0
+offset_top = 40.0
+offset_right = 93.0
+offset_bottom = 71.0
+grow_horizontal = 2
+
+[node name="AreaBottom" type="Control" parent="."]
+custom_minimum_size = Vector2(23, 107)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -113.0
+offset_top = -107.0
+offset_right = 113.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ToolsContainer" type="GridContainer" parent="AreaBottom"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -106.0
+offset_top = -100.0
+offset_right = 106.0
+grow_horizontal = 2
+grow_vertical = 0
+columns = 3
+
+[node name="ToolBlock" type="Button" parent="AreaBottom/ToolsContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "BLOCK"
+clip_text = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="VSeparator" type="VSeparator" parent="AreaBottom/ToolsContainer"]
+layout_mode = 2
+
+[node name="ToolFace" type="Button" parent="AreaBottom/ToolsContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "FACE"
+clip_text = true
+icon_alignment = 1
+expand_icon = true
+
+[connection signal="pressed" from="AreaTop/GridContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="AreaTop/GridContainer/LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="pressed" from="AreaBottom/ToolsContainer/ToolBlock" to="." method="_on_tool_block_pressed"]
+[connection signal="pressed" from="AreaBottom/ToolsContainer/ToolFace" to="." method="_on_tool_face_pressed"]

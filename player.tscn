@@ -1,30 +1,31 @@
 [gd_scene load_steps=7 format=3 uid="uid://76sja71fjsp2"]
 
-[ext_resource type="Script" path="res://player.gd" id="1_oyd4n"]
-[ext_resource type="Script" path="res://player_interaction.gd" id="2_4pyb3"]
+[ext_resource type="Script" path="res://Scripts/player.gd" id="1_jfsww"]
 [ext_resource type="ArrayMesh" uid="uid://c6t4k3omgds31" path="res://Assets/Models/arrow.res" id="2_8er4n"]
-[ext_resource type="Script" path="res://interface.gd" id="3_cy3yk"]
+[ext_resource type="Script" path="res://Scripts/player_interaction.gd" id="2_eug8s"]
+[ext_resource type="PackedScene" uid="uid://cr60y1pxf3sue" path="res://interface.tscn" id="4_cbukq"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_kdx6p"]
 radius = 0.1
 height = 0.2
+radial_segments = 8
+rings = 8
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_8epwk"]
 radius = 0.1
 
 [node name="Player" type="CharacterBody3D"]
+transform = Transform3D(1, -2.22723e-05, -0.000748574, 2.11592e-05, 0.999999, -0.00145971, 0.000748606, 0.0014597, 0.999999, 0, 0, 0)
 motion_mode = 1
-script = ExtResource("1_oyd4n")
+script = ExtResource("1_jfsww")
 
 [node name="PlayerInteraction" type="Node3D" parent="."]
-script = ExtResource("2_4pyb3")
+script = ExtResource("2_eug8s")
 
 [node name="Pointer" type="Node3D" parent="."]
 top_level = true
-visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Pointer"]
-visible = false
 cast_shadow = 0
 mesh = ExtResource("2_8er4n")
 skeleton = NodePath("../..")
@@ -46,126 +47,12 @@ margin = 0.1
 fov = 90.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-visible = false
 cast_shadow = 0
 mesh = SubResource("SphereMesh_kdx6p")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-visible = false
 shape = SubResource("SphereShape3D_8epwk")
 disabled = true
 
-[node name="Interface" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("3_cy3yk")
-
-[node name="DebugText" type="RichTextLabel" parent="Interface"]
-layout_mode = 0
-offset_right = 398.0
-offset_bottom = 331.0
-text = "help"
-
-[node name="AreaTop" type="Control" parent="Interface"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -101.0
-offset_right = 101.0
-offset_bottom = 88.0
-grow_horizontal = 2
-
-[node name="GridContainer" type="GridContainer" parent="Interface/AreaTop"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -92.0
-offset_right = 92.0
-offset_bottom = 31.0
-grow_horizontal = 2
-columns = 3
-
-[node name="SaveButton" type="Button" parent="Interface/AreaTop/GridContainer"]
-layout_mode = 2
-text = "Save Data"
-
-[node name="VSeparator" type="VSeparator" parent="Interface/AreaTop/GridContainer"]
-layout_mode = 2
-
-[node name="LoadButton" type="Button" parent="Interface/AreaTop/GridContainer"]
-layout_mode = 2
-text = "Load Data"
-
-[node name="LineEdit" type="LineEdit" parent="Interface/AreaTop"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -93.0
-offset_top = 40.0
-offset_right = 93.0
-offset_bottom = 71.0
-grow_horizontal = 2
-
-[node name="AreaBottom" type="Control" parent="Interface"]
-custom_minimum_size = Vector2(23, 107)
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -113.0
-offset_top = -107.0
-offset_right = 113.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="ToolsContainer" type="GridContainer" parent="Interface/AreaBottom"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -106.0
-offset_top = -100.0
-offset_right = 106.0
-grow_horizontal = 2
-grow_vertical = 0
-columns = 3
-
-[node name="ToolBlock" type="Button" parent="Interface/AreaBottom/ToolsContainer"]
-clip_contents = true
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-text = "BLOCK"
-clip_text = true
-icon_alignment = 1
-expand_icon = true
-
-[node name="VSeparator" type="VSeparator" parent="Interface/AreaBottom/ToolsContainer"]
-layout_mode = 2
-
-[node name="ToolFace" type="Button" parent="Interface/AreaBottom/ToolsContainer"]
-clip_contents = true
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-text = "FACE"
-clip_text = true
-icon_alignment = 1
-expand_icon = true
-
-[connection signal="pressed" from="Interface/AreaTop/GridContainer/SaveButton" to="Interface" method="_on_save_button_pressed"]
-[connection signal="pressed" from="Interface/AreaTop/GridContainer/LoadButton" to="Interface" method="_on_load_button_pressed"]
-[connection signal="focus_entered" from="Interface/AreaTop/LineEdit" to="." method="_on_line_edit_focus_entered"]
-[connection signal="focus_exited" from="Interface/AreaTop/LineEdit" to="." method="_on_line_edit_focus_exited"]
-[connection signal="pressed" from="Interface/AreaBottom/ToolsContainer/ToolBlock" to="PlayerInteraction" method="_on_tool_block_pressed"]
-[connection signal="pressed" from="Interface/AreaBottom/ToolsContainer/ToolFace" to="PlayerInteraction" method="_on_tool_face_pressed"]
+[node name="Interface" parent="." instance=ExtResource("4_cbukq")]
+metadata/_edit_use_anchors_ = true

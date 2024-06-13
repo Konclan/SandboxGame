@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dwegml4v5p4vy"]
+[gd_scene load_steps=11 format=3 uid="uid://dwegml4v5p4vy"]
 
 [ext_resource type="PackedScene" uid="uid://76sja71fjsp2" path="res://player.tscn" id="1_pmneb"]
-[ext_resource type="Script" path="res://Voxels/voxels.gd" id="2_2pc3f"]
-[ext_resource type="PackedScene" uid="uid://bscg6rm68eugt" path="res://Voxels/Blocks/block.tscn" id="3_c030k"]
+[ext_resource type="Material" uid="uid://c645hnp8wc4me" path="res://Assets/Materials/grid.tres" id="2_djfyb"]
+[ext_resource type="Script" path="res://World.gd" id="2_rycag"]
+[ext_resource type="Script" path="res://Scripts/greedy_mesh.gd" id="3_c8la0"]
+[ext_resource type="PackedScene" uid="uid://bv4dtmwukqcg6" path="res://cube_spawner.tscn" id="5_ro1me"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vljmq"]
 
@@ -15,29 +17,205 @@ sky = SubResource("Sky_8pojv")
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_pwd5p"]
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_bu58q"]
+
 [node name="Editor" type="Node"]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="Environment" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
 environment = SubResource("Environment_iydjw")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
 transform = Transform3D(0.707107, -0.612373, 0.353553, 0, 0.5, 0.866025, -0.707107, -0.612372, 0.353553, 0, 3, 0)
 shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("1_pmneb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="Voxels" type="Node3D" parent="."]
-script = ExtResource("2_2pc3f")
+[node name="World" type="Node" parent="."]
+script = ExtResource("2_rycag")
 
-[node name="Blocks" type="Node" parent="Voxels"]
+[node name="Floor" type="StaticBody3D" parent="World"]
+metadata/_edit_group_ = true
 
-[node name="Panels" type="Node" parent="Voxels"]
-
-[node name="Panes" type="Node" parent="Voxels"]
-
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Floor"]
 shape = SubResource("WorldBoundaryShape3D_pwd5p")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Floor"]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
+mesh = SubResource("PlaneMesh_bu58q")
+surface_material_override/0 = ExtResource("2_djfyb")
+
+[node name="GreedyMesh" type="Node3D" parent="World"]
+script = ExtResource("3_c8la0")
+
+[node name="CubeSpawner1" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1, 1)
+
+[node name="CubeSpawner2" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1, 2)
+
+[node name="CubeSpawner3" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1, 3)
+
+[node name="CubeSpawner4" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1, 4)
+
+[node name="CubeSpawner5" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, 1)
+
+[node name="CubeSpawner6" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, 2)
+
+[node name="CubeSpawner7" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, 3)
+
+[node name="CubeSpawner8" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, 4)
+
+[node name="CubeSpawner9" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, 1)
+
+[node name="CubeSpawner10" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, 2)
+
+[node name="CubeSpawner11" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, 3)
+
+[node name="CubeSpawner12" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, 4)
+
+[node name="CubeSpawner41" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 4, 1)
+
+[node name="CubeSpawner42" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 4, 2)
+
+[node name="CubeSpawner43" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 4, 3)
+
+[node name="CubeSpawner44" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 4, 4)
+
+[node name="CubeSpawner45" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 4, 1)
+
+[node name="CubeSpawner46" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 4, 2)
+
+[node name="CubeSpawner47" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 4, 3)
+
+[node name="CubeSpawner48" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 4, 4)
+
+[node name="CubeSpawner49" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 4, 1)
+
+[node name="CubeSpawner50" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 4, 2)
+
+[node name="CubeSpawner51" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 4, 3)
+
+[node name="CubeSpawner52" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 4, 4)
+
+[node name="CubeSpawner13" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, 1)
+
+[node name="CubeSpawner14" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, 2)
+
+[node name="CubeSpawner15" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, 3)
+
+[node name="CubeSpawner16" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, 4)
+
+[node name="CubeSpawner53" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 1)
+
+[node name="CubeSpawner54" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 2)
+
+[node name="CubeSpawner55" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 3)
+
+[node name="CubeSpawner56" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, 4)
+
+[node name="CubeSpawner17" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2, 1)
+
+[node name="CubeSpawner18" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2, 2)
+
+[node name="CubeSpawner19" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2, 3)
+
+[node name="CubeSpawner20" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2, 4)
+
+[node name="CubeSpawner21" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2, 1)
+
+[node name="CubeSpawner22" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2, 4)
+
+[node name="CubeSpawner23" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2, 1)
+
+[node name="CubeSpawner24" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2, 4)
+
+[node name="CubeSpawner25" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2, 1)
+
+[node name="CubeSpawner26" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2, 2)
+
+[node name="CubeSpawner27" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2, 3)
+
+[node name="CubeSpawner28" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2, 4)
+
+[node name="CubeSpawner29" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 3, 1)
+
+[node name="CubeSpawner30" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 3, 2)
+
+[node name="CubeSpawner31" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 3, 3)
+
+[node name="CubeSpawner32" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 3, 4)
+
+[node name="CubeSpawner33" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 1)
+
+[node name="CubeSpawner34" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 4)
+
+[node name="CubeSpawner35" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 3, 1)
+
+[node name="CubeSpawner36" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 3, 4)
+
+[node name="CubeSpawner37" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3, 1)
+
+[node name="CubeSpawner38" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3, 2)
+
+[node name="CubeSpawner39" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3, 3)
+
+[node name="CubeSpawner40" parent="World/GreedyMesh" instance=ExtResource("5_ro1me")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3, 4)
+
+[node name="Chunks" type="Node3D" parent="World"]

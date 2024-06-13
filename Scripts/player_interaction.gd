@@ -6,7 +6,7 @@ const RANGE = 20
 @onready var scene = get_tree().current_scene
 @onready var pointer = get_node("../Pointer")
 @onready var interface = get_node("../Interface")
-@onready var voxels = get_node("../../Voxels")
+@onready var greedy_mesh = $"../../World/GreedyMesh"
 
 var brick_texture = load("res://Assets/Textures/brick.png")
 var concrete_texture = load("res://Assets/Textures/concrete_floor.png")
@@ -15,7 +15,7 @@ var default_texture = load("res://Assets/Textures/default_arrows.png")
 var tool := String("")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 
 	var cursor_raycast = get_cursor_pos_3d()
 	
@@ -48,18 +48,22 @@ func primary_action(cast):
 	if cast:
 		match tool:
 			"ToolBlock":
-				voxels.block_tool_place(cast)
+				greedy_mesh.make_new_solid(cast.position)
+				#voxels.block_tool_place(cast)
 			"ToolFace":
-				voxels.face_tool_texture(cast, brick_texture)
+				pass
+				#voxels.face_tool_texture(cast, brick_texture)
 
 
 func secondary_action(cast):
 	if cast:
 		match tool:
 			"ToolBlock":
-				voxels.block_tool_remove(cast)
+				greedy_mesh.remove_solid(cast.position - cast.normal)
+				#voxels.block_tool_remove(cast)
 			"ToolFace":
-				voxels.face_tool_texture(cast, concrete_texture)
+				pass
+				#voxels.face_tool_texture(cast, concrete_texture)
 
 func get_cursor_pos_3d():
 	if interface.moused:
@@ -80,9 +84,5 @@ func get_cursor_pos_3d():
 	return result
 
 
-func _on_tool_block_pressed():
-	tool = "ToolBlock"
-
-
-func _on_tool_face_pressed():
-	tool = "ToolFace"
+func set_tool(t: String):
+	tool = t

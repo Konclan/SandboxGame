@@ -34,7 +34,7 @@ func _input(event):
 			mouse_input_x = - event.relative.x
 			mouse_input_y = - event.relative.y
 
-func player_movement(delta):
+func player_movement(_delta):
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	var input_dir_y = Input.get_axis("move_down", "move_up")
