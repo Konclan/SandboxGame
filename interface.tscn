@@ -14,8 +14,9 @@ script = ExtResource("1_agtbr")
 
 [node name="DebugText" type="RichTextLabel" parent="."]
 layout_mode = 0
-offset_right = 398.0
-offset_bottom = 331.0
+offset_right = 445.0
+offset_bottom = 648.0
+theme_override_font_sizes/normal_font_size = 16
 text = "help"
 
 [node name="AreaTop" type="Control" parent="."]

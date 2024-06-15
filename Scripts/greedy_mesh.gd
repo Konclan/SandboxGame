@@ -6,46 +6,15 @@ extends Node3D
 const GREEDY_CUBE = preload("res://Assets/Materials/greedy_cube.gdshader")
 
 func make_solid(pos):
-	World.set_chunk_data(pos.snapped(Vector3(grid_size, grid_size, grid_size)), 1)
+	World.set_block(pos.snapped(grid_size), "SOLID")
 
 func make_new_solid(pos):
 	make_solid(pos)
 	greedy_mesh(World.get_chunk(pos))
 
 func remove_solid(pos):
-	World.set_chunk_data(pos.snapped(Vector3(grid_size, grid_size, grid_size)), 0)
+	World.set_block(pos.snapped(grid_size), "AIR")
 	greedy_mesh(World.get_chunk(pos))
-
-#func def_cube(size, pos):
-	#var cube_size = size/2
-#
-	#var vert_north_topright = Vector3(-cube_size.x, cube_size.y, cube_size.z)
-	#var vert_north_topleft = Vector3(cube_size.x, cube_size.y, cube_size.z)
-	#var vert_north_bottomleft = Vector3(cube_size.x, cube_size.y, -cube_size.z)
-	#var vert_north_bottomright = Vector3(-cube_size.x, cube_size.y, -cube_size.z)
-	#
-	#var vert_south_topright = Vector3(-cube_size.x, -cube_size.y, cube_size.z)
-	#var vert_south_topleft = Vector3(cube_size.x, -cube_size.y, cube_size.z)
-	#var vert_south_bottomleft = Vector3(cube_size.x, -cube_size.y, -cube_size.z)
-	#var vert_south_bottomright = Vector3(-cube_size.x, -cube_size.y, -cube_size.z)
-	#
-	## Make the six quads for needed to make a box!
-	## ============================================
-	## IMPORTANT: You have to input the points in the going either clockwise, or counter clockwise
-	## or the new_quad function will not work!
-	#
-	#array_quads.append(new_quad(vert_south_topright, vert_south_topleft, vert_south_bottomleft, vert_south_bottomright))
-	#array_quads.append(new_quad(vert_north_topright, vert_north_bottomright, vert_north_bottomleft, vert_north_topleft))
-	#
-	#array_quads.append(new_quad(vert_north_bottomleft, vert_north_bottomright, vert_south_bottomright, vert_south_bottomleft))
-	#array_quads.append(new_quad(vert_north_topleft, vert_south_topleft, vert_south_topright, vert_north_topright))
-	#
-	#array_quads.append(new_quad(vert_north_topright, vert_south_topright, vert_south_bottomright, vert_north_bottomright))
-	#array_quads.append(new_quad(vert_north_topleft, vert_north_bottomleft, vert_south_bottomleft, vert_south_topleft))
-	## ============================================
-	#
-	#return {"pos": pos, "quads": array_quads}
-
 
 func new_quad(point_1: Vector3, point_2: Vector3, point_3: Vector3, point_4: Vector3):
 	var array_quad_vertices := []
@@ -82,15 +51,10 @@ func _add_or_get_vertex_from_array(vert: Vector3, vertices: Array):
 		#vertices[vert_check] = vertices.size()-1
 		return vertices.size()-1
 
-#func sort_xyz(a, b):
-	#if a.global_position < b.global_position: return true
-	#return false
-
 func greedy_mesh(chunk):
 	if not chunk: printerr("greedy_mesh(): No chunk"); return
 	var chunk_size = World.CHUNK_SIZE
 	var array_quads := []
-	var global_pos = chunk.pos * chunk_size
 	# Sweep over each axis (X, Y and Z)
 	for d in range(3):
 		var i: int; var width: int; var height: int;
@@ -219,8 +183,8 @@ func greedy_mesh(chunk):
 						i += 1
 						n += 1
 
-	var MeshInstance = chunk.body.get_child(0)
-	var CollisionShape = chunk.body.get_child(1)
+	var MeshInstance = chunk.MeshInstance
+	var CollisionShape = chunk.CollisionShape
 	
 	if array_quads:
 		# Generate faces

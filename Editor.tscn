@@ -37,6 +37,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("2_rycag")
 
 [node name="Floor" type="StaticBody3D" parent="World"]
+visible = false
 metadata/_edit_group_ = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="World/Floor"]
