@@ -9,62 +9,47 @@ var MeshInstance := MeshInstance3D.new()
 var CollisionShape := CollisionShape3D.new()
 
 @onready var world = $"../.."
-
-var bitboards: Array
-var chunk: Dictionary
+var chunk_size: Vector3
 
 func _ready():
-	var chunk_size = world.CHUNK_SIZE
-	blocks_array.resize(chunk_size.y * 256 + chunk_size.z * 16 + chunk_size.x)
+	chunk_size = world.CHUNK_SIZE
+	blocks_array.resize(world.to_yzx_order(chunk_size))
 	
 	add_child(blocks)
 	blocks.name = "Blocks"
 	add_child(StaticBody)
 	StaticBody.add_child(MeshInstance)
 	StaticBody.add_child(CollisionShape)
-	
-	for c in range(chunk_size.y):
-		var bitboard := BitMap.new()
-		bitboard.create(Vector2i(chunk_size.x, chunk_size.z))
-		bitboards.append(bitboard)
 
 func set_block(pos: Vector3, type: int):
 	var offset = pos - position
+	var index = world.to_yzx_order(offset)
+	var block = blocks_array[index]
 	
-	var bitboard = bitboards[offset.y]
-	var bit_pos = Vector2i(offset.x, offset.z)
-	
-	if bit_pos > bitboard.get_size(): printerr("set_block: Pos ", bit_pos, " out of range! ", bitboard.get_size()); return
-	
-	var prev_bit = bitboard.get_bit(bit_pos.x, bit_pos.y)
-	var bit = true if type > 0 else false
-	bitboard.set_bit(bit_pos.x, bit_pos.y, bit)
-	
-	var index = world.to_yzx_order(pos)
-	
-	if bit and not prev_bit:
-		var block = Block.new()
-		block.position = pos
-		blocks.add_child(block)
-		block.name = str("block",index)
-		blocks_array[index] = block
-	elif not bit and prev_bit:
-		var block = get_block(pos)
-		if block:
-			block.queue_free()
-			blocks_array[index] = null
+	if type > 0 and not block:
+		var new_block = Block.new()
+		new_block.position = pos
+		blocks.add_child(new_block)
+		new_block.name = str("block",index)
+		blocks_array[index] = new_block
+	elif block and not type > 0:
+		block.queue_free()
+		blocks_array[index] = null
 		
 func get_block(pos):
-	var index = world.to_yzx_order(pos)
-	return blocks_array[index]
+	var index = world.to_yzx_order(snap_to_chunk(pos))
+	var block = blocks_array[index]
+	return block
+
+func snap_to_chunk(pos):
+	return Vector3(fmod(pos.x, chunk_size.x), fmod(pos.y, chunk_size.y), fmod(pos.z, chunk_size.z))
 
 func is_solid(pos):
-	var offset = pos - position
-	
-	var bitboard = bitboards[offset.y]
-	var bit_pos = Vector2i(offset.x, offset.z)
-	if bit_pos > bitboard.get_size(): printerr("get_chunk_data: Pos ", bit_pos, " out of range! ", bitboard.get_size()); return
-	return bitboard.get_bit(bit_pos.x, bit_pos.y)
+	var offset = snap_to_chunk(pos)
+	var index = world.to_yzx_order(offset)
+	var block = blocks_array[index]
+	if block: return true
+	return false
 
 func is_empty(pos):
 	return not is_solid(pos)

@@ -10,11 +10,11 @@ func make_solid(pos):
 
 func make_new_solid(pos):
 	make_solid(pos)
-	greedy_mesh(World.get_chunk(pos))
+	update_chunk_mesh(World.get_chunk(pos))
 
 func remove_solid(pos):
 	World.set_block(pos.snapped(grid_size), "AIR")
-	greedy_mesh(World.get_chunk(pos))
+	update_chunk_mesh(World.get_chunk(pos))
 
 func new_quad(point_1: Vector3, point_2: Vector3, point_3: Vector3, point_4: Vector3):
 	var array_quad_vertices := []
@@ -48,13 +48,20 @@ func _add_or_get_vertex_from_array(vert: Vector3, vertices: Array):
 	else:
 		vertices.append(vert)
 		
-		#vertices[vert_check] = vertices.size()-1
 		return vertices.size()-1
 
-func greedy_mesh(chunk):
+func update_chunk_mesh(chunk):
 	if not chunk: printerr("greedy_mesh(): No chunk"); return
+
+	# Todo: Fix the lag with threading probably
+	greedy_mesh(chunk)
+
+
+
+func greedy_mesh(chunk):
 	var chunk_size = World.CHUNK_SIZE
 	var array_quads := []
+	
 	# Sweep over each axis (X, Y and Z)
 	for d in range(3):
 		var i: int; var width: int; var height: int;
@@ -81,30 +88,9 @@ func greedy_mesh(chunk):
 					
 					# q determines the direction (X, Y or Z) that we are searching
 					# m.IsBlockAt(x,y,z) takes global map positions and returns true if a block exists there
-					# ^^^ Actually I'm using a bitmap idiot!
 					
-					var blockCurrent: bool
-					var blockCompare: bool
-					
-					var pos_compare =  pos + q
-					
-					var bitboard_current: BitMap
-					var bit_pos_current: Vector2i
-					var bitboard_compare: BitMap
-					var bit_pos_compare: Vector2i
-					
-					if pos[d] >= 0:
-						bitboard_current = chunk.bitboards[pos.y]
-						bit_pos_current = Vector2i(pos.x, pos.z)
-						blockCurrent = bitboard_current.get_bit(bit_pos_current.x, bit_pos_current.y)
-					else: blockCurrent = false
-					if pos[d] < chunk_size[d] - 1: 
-						bitboard_compare = chunk.bitboards[pos_compare.y] if pos_compare.y != pos.y || not bitboard_current else bitboard_current
-						bit_pos_compare = Vector2i(pos_compare.x, pos_compare.z)
-						blockCompare = bitboard_compare.get_bit(bit_pos_compare.x, bit_pos_compare.y)
-					else: blockCompare = false
-					
-					#print(pos[d] < chunk_size[d])
+					var blockCurrent = true if pos[d] >= 0 and chunk.is_solid(pos) else false
+					var blockCompare = true if pos[d] < chunk_size[d] - 1 and chunk.is_solid(pos + q) else false
 					
 					# The mask is set to true if there is a visible face between two blocks,
 					#   i.e. both aren't empty and both aren't blocks
@@ -204,7 +190,6 @@ func greedy_mesh(chunk):
 		surface_tool.commit(mesh)
 		
 		MeshInstance.mesh = mesh
-		#CollisionShape.make_convex_from_siblings
 		CollisionShape.shape = mesh.create_trimesh_shape()
 		var mat = ShaderMaterial.new()
 		mat.shader = GREEDY_CUBE

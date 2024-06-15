@@ -65,4 +65,4 @@ func set_block(pos, type):
 	chunk.set_block(pos, block_types[type])
 
 func to_yzx_order(pos):
-	return pos.y * 256 + pos.z * 16 + pos.x
+	return int(floor(pos.y) * 256 + floor(pos.z) * 16 + floor(pos.x))
