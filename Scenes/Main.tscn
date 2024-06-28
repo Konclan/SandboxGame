@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://dp6834easkvem"]
+[gd_scene load_steps=10 format=3 uid="uid://dp6834easkvem"]
 
-[ext_resource type="Script" path="res://Scripts/main_menu.gd" id="1_4rmro"]
+[ext_resource type="Script" path="res://Scripts/UI/MainMenu.gd" id="1_4rmro"]
 [ext_resource type="Texture2D" uid="uid://rpr4sx8qicvd" path="res://Assets/Textures/brick.png" id="2_6r64i"]
-[ext_resource type="Script" path="res://Scripts/background.gd" id="2_mp3vm"]
+[ext_resource type="PackedScene" uid="uid://dwegml4v5p4vy" path="res://Scenes/Editor.tscn" id="2_dodbw"]
+[ext_resource type="Script" path="res://Scripts/UI/Background.gd" id="2_mp3vm"]
 [ext_resource type="Material" uid="uid://c645hnp8wc4me" path="res://Assets/Materials/grid.tres" id="4_lcsa0"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_2eode"]
@@ -30,7 +31,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4rmro")
-editor_scene = "res://Editor.tscn"
+editor_scene = ExtResource("2_dodbw")
 
 [node name="Button" type="Button" parent="MainMenu"]
 layout_mode = 1
@@ -48,8 +49,9 @@ grow_vertical = 0
 theme_override_font_sizes/font_size = 52
 text = "Load Editor"
 
-[node name="Background3D" type="Node" parent="MainMenu"]
+[node name="Background3D" type="Node" parent="MainMenu" node_paths=PackedStringArray("mesh_instance")]
 script = ExtResource("2_mp3vm")
+mesh_instance = NodePath("Node3D/MeshInstance3D")
 
 [node name="Node3D" type="Node3D" parent="MainMenu/Background3D"]
 

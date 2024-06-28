@@ -1,0 +1,60 @@
+[gd_scene load_steps=8 format=3 uid="uid://76sja71fjsp2"]
+
+[ext_resource type="Script" path="res://Scripts/Player/Player.gd" id="1_0mpoe"]
+[ext_resource type="ArrayMesh" uid="uid://c6t4k3omgds31" path="res://Assets/Models/arrow.res" id="2_8er4n"]
+[ext_resource type="Script" path="res://Scripts/Player/UserInteraction.gd" id="2_dges2"]
+[ext_resource type="PackedScene" uid="uid://cr60y1pxf3sue" path="res://Scenes/UserInterface.tscn" id="4_cbukq"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8epwk"]
+radius = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yyhbe"]
+transparency = 1
+albedo_color = Color(1, 0, 0.113725, 0.0941176)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n7ej7"]
+material = SubResource("StandardMaterial3D_yyhbe")
+size = Vector3(1.001, 1.001, 1.001)
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("user_interaction", "camera_controller", "user_interface", "Camera", "RayCast")]
+transform = Transform3D(1, -2.22723e-05, -0.000748574, 2.11592e-05, 0.999999, -0.00145971, 0.000748606, 0.0014597, 0.999999, 0, 0, 0)
+motion_mode = 1
+script = ExtResource("1_0mpoe")
+user_interaction = NodePath("UserInteraction")
+camera_controller = NodePath("CameraController")
+user_interface = NodePath("UserInterface")
+Camera = NodePath("CameraController/Camera3D")
+RayCast = NodePath("CameraController/Camera3D/RayCast3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, -5.68434e-13, 5.82077e-11, 7.95808e-13, 1, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("SphereShape3D_8epwk")
+disabled = true
+
+[node name="UserInteraction" type="Node3D" parent="." node_paths=PackedStringArray("_player", "_pointer", "_block_highlight", "_user_interface")]
+script = ExtResource("2_dges2")
+_player = NodePath("..")
+_pointer = NodePath("../Pointer")
+_block_highlight = NodePath("../BlockHighlight")
+_user_interface = NodePath("../UserInterface")
+
+[node name="CameraController" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraController"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
+fov = 90.0
+
+[node name="RayCast3D" type="RayCast3D" parent="CameraController/Camera3D"]
+
+[node name="Pointer" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, -5.68434e-13, 5.82077e-11, 7.95808e-13, 1, 0, 0, 0, 1, 0, 0, 0)
+cast_shadow = 0
+mesh = ExtResource("2_8er4n")
+
+[node name="BlockHighlight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, -5.68434e-13, 5.82077e-11, 7.95808e-13, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("BoxMesh_n7ej7")
+
+[node name="UserInterface" parent="." node_paths=PackedStringArray("_user_interaction") instance=ExtResource("4_cbukq")]
+_user_interaction = NodePath("../UserInteraction")
+metadata/_edit_use_anchors_ = true

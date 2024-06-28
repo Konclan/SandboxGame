@@ -1,16 +1,12 @@
-extends Node3D
-class_name PlayerInteraction
+class_name UserInteraction extends Node3D
 
 const RANGE = 20
 
-@onready var scene = get_tree().current_scene
-@onready var pointer = get_node("../Pointer")
-@onready var interface = get_node("../Interface")
-@onready var greedy_mesh = $"../../World/GreedyMesh"
-
-var brick_texture = preload("res://Assets/Textures/brick.png")
-var concrete_texture = preload("res://Assets/Textures/concrete_floor.png")
-var default_texture = preload("res://Assets/Textures/default_arrows.png")
+@onready var _scene = get_tree().current_scene
+@export var _player: Player
+@export var _pointer: MeshInstance3D
+@export var _block_highlight: MeshInstance3D
+@export var _user_interface: Control
 
 var tool := String("")
 
@@ -26,49 +22,53 @@ func _process(_delta):
 		if Input.is_action_just_pressed("secondary_action"):
 			secondary_action(cursor_raycast)
 	
-	if cursor_raycast:
-		pointer.visible = true
+	if cursor_raycast and cursor_raycast.collider is Chunk:
+		_pointer.visible = true
+		_block_highlight.visible = true
 		var target_position = cursor_raycast.position
 		var target_normal = cursor_raycast.normal
 		var new_position = target_position + (1 * target_normal)
 	
-		pointer.position = new_position
+		_pointer.global_position = new_position
 		
-		if not pointer.position.is_equal_approx(target_position):
+		if not _pointer.global_position.is_equal_approx(target_position):
 			if target_normal.is_equal_approx(Vector3.UP):
-				pointer.rotation = Vector3(deg_to_rad(-90), 0, 0)
+				_pointer.rotation = Vector3(deg_to_rad(-90), 0, 0)
 			elif target_normal.is_equal_approx(Vector3.DOWN):
-				pointer.rotation = Vector3(deg_to_rad(90), 0, 0)
+				_pointer.rotation = Vector3(deg_to_rad(90), 0, 0)
 			else:
-				pointer.look_at(target_position)
+				_pointer.look_at(target_position)
+				
+		var brush_position = (cursor_raycast.position - 0.5 * cursor_raycast.normal).floor()
+		
+		_block_highlight.global_position = brush_position + Vector3(0.5, 0.5, 0.5)
 	else:
-		pointer.visible = false
+		_pointer.visible = false
+		_block_highlight.visible = false
 
 func primary_action(cast):
 	if cast:
+		var brush_position = (cast.position - 0.5 * cast.normal).floor()
 		match tool:
 			"ToolBlock":
-				greedy_mesh.make_new_solid(floor(cast.position + cast.normal/2))
-				#voxels.block_tool_place(cast)
+				ChunkManager.instance.set_brush(Vector3i(brush_position), BrushManager.instance.Air)
 			"ToolFace":
-				pass
-				#voxels.face_tool_texture(cast, brick_texture)
+				ChunkManager.instance.set_brush_texture_face(Vector3i(brush_position), cast.normal, 2)
 
 
 func secondary_action(cast):
 	if cast:
+		var brush_position = (cast.position - 0.5 * cast.normal).floor()
 		match tool:
 			"ToolBlock":
-				greedy_mesh.remove_solid(floor(cast.position - cast.normal/2))
-				#voxels.block_tool_remove(cast)
+				ChunkManager.instance.set_brush(Vector3i(brush_position + cast.normal), Brush.new())
 			"ToolFace":
-				pass
-				#voxels.face_tool_texture(cast, concrete_texture)
+				ChunkManager.instance.set_brush_texture_face(Vector3i(brush_position), cast.normal, 3)
 
 func get_cursor_pos_3d():
-	if interface.moused:
+	if _user_interface.mouse_over_ui():
 		return
-	var viewport = scene.get_viewport()
+	var viewport = _scene.get_viewport()
 	var camera = viewport.get_camera_3d()
 	var mouse_pos = viewport.get_mouse_position()
 	var ray_length = RANGE

@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://brx8wul3mopsu"]
+
+[ext_resource type="Script" path="res://Scripts/World/Chunk.gd" id="1_vklth"]
+
+[node name="Chunk" type="StaticBody3D" node_paths=PackedStringArray("mesh_instance", "collision_shape")]
+script = ExtResource("1_vklth")
+mesh_instance = NodePath("MeshInstance3D")
+collision_shape = NodePath("CollisionShape3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]

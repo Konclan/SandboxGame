@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://cr60y1pxf3sue"]
 
-[ext_resource type="Script" path="res://Scripts/interface.gd" id="1_agtbr"]
+[ext_resource type="Script" path="res://Scripts/Player/UserInterface.gd" id="1_agtbr"]
 
-[node name="Interface" type="Control"]
+[node name="Interface" type="Control" node_paths=PackedStringArray("_debug_text", "_text_box", "_button_save", "_button_load", "_button_tool_block", "_button_tool_face")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,6 +11,12 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_agtbr")
+_debug_text = NodePath("DebugText")
+_text_box = NodePath("AreaTop/LineEdit")
+_button_save = NodePath("AreaTop/GridContainer/SaveButton")
+_button_load = NodePath("AreaTop/GridContainer/LoadButton")
+_button_tool_block = NodePath("AreaBottom/ToolsContainer/ToolBlock")
+_button_tool_face = NodePath("AreaBottom/ToolsContainer/ToolFace")
 
 [node name="DebugText" type="RichTextLabel" parent="."]
 layout_mode = 0
