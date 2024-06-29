@@ -1,8 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://cr60y1pxf3sue"]
+[gd_scene load_steps=9 format=3 uid="uid://cr60y1pxf3sue"]
 
 [ext_resource type="Script" path="res://Scripts/Player/UserInterface.gd" id="1_agtbr"]
+[ext_resource type="Texture2D" uid="uid://ckg1hiots1h58" path="res://icon.svg" id="2_e12ga"]
+[ext_resource type="Texture2D" uid="uid://bmxvx33ynaqmd" path="res://Assets/Textures/default.png" id="2_v6kwd"]
+[ext_resource type="Texture2D" uid="uid://rpr4sx8qicvd" path="res://Assets/Textures/brick.png" id="3_7wq5y"]
+[ext_resource type="Texture2D" uid="uid://dt8ywwfyaq83k" path="res://Assets/Textures/concrete_floor.png" id="4_k35un"]
+[ext_resource type="Texture2D" uid="uid://c6jvo0beqcl1i" path="res://Assets/Textures/plaster_ceiling.png" id="5_1v76a"]
+[ext_resource type="Texture2D" uid="uid://b7q82hnn6ucd1" path="res://Assets/Textures/uv_test.png" id="7_tp173"]
 
-[node name="Interface" type="Control" node_paths=PackedStringArray("_debug_text", "_text_box", "_button_save", "_button_load", "_button_tool_block", "_button_tool_face")]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ic6xm"]
+content_margin_left = 16.0
+
+[node name="Interface" type="Control" node_paths=PackedStringArray("_debug_text", "_text_box", "_button_save", "_button_load", "_tool_list", "_texture_list")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,8 +24,8 @@ _debug_text = NodePath("DebugText")
 _text_box = NodePath("AreaTop/LineEdit")
 _button_save = NodePath("AreaTop/GridContainer/SaveButton")
 _button_load = NodePath("AreaTop/GridContainer/LoadButton")
-_button_tool_block = NodePath("AreaBottom/ToolsContainer/ToolBlock")
-_button_tool_face = NodePath("AreaBottom/ToolsContainer/ToolFace")
+_tool_list = NodePath("AreaBottom/ToolsList")
+_texture_list = NodePath("AreaRight/TexturesList")
 
 [node name="DebugText" type="RichTextLabel" parent="."]
 layout_mode = 0
@@ -82,42 +91,72 @@ offset_right = 113.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="ToolsContainer" type="GridContainer" parent="AreaBottom"]
+[node name="ToolsList" type="ItemList" parent="AreaBottom"]
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -106.0
-offset_top = -100.0
-offset_right = 106.0
+anchor_bottom = 0.5
+offset_left = -89.0
+offset_top = -60.5
+offset_right = 89.0
+offset_bottom = 51.5
 grow_horizontal = 2
-grow_vertical = 0
-columns = 3
+grow_vertical = 2
+theme_override_constants/h_separation = 10
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ic6xm")
+auto_height = true
+item_count = 2
+max_columns = 2
+same_column_width = true
+icon_mode = 0
+icon_scale = 0.5
+item_0/text = "Block"
+item_0/icon = ExtResource("2_e12ga")
+item_1/text = "Face"
+item_1/icon = ExtResource("2_e12ga")
 
-[node name="ToolBlock" type="Button" parent="AreaBottom/ToolsContainer"]
-clip_contents = true
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-text = "BLOCK"
-clip_text = true
-icon_alignment = 1
-expand_icon = true
+[node name="AreaRight" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -224.0
+offset_top = -143.0
+offset_bottom = 143.0
+grow_horizontal = 0
+grow_vertical = 2
 
-[node name="VSeparator" type="VSeparator" parent="AreaBottom/ToolsContainer"]
-layout_mode = 2
-
-[node name="ToolFace" type="Button" parent="AreaBottom/ToolsContainer"]
-clip_contents = true
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-text = "FACE"
-clip_text = true
-icon_alignment = 1
-expand_icon = true
+[node name="TexturesList" type="ItemList" parent="AreaRight"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -101.0
+offset_top = -140.0
+offset_right = 101.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+auto_height = true
+item_count = 5
+item_0/text = "None"
+item_0/icon = ExtResource("2_v6kwd")
+item_1/text = "Brick"
+item_1/icon = ExtResource("3_7wq5y")
+item_2/text = "Concrete Tiles"
+item_2/icon = ExtResource("4_k35un")
+item_3/text = "Plaster"
+item_3/icon = ExtResource("5_1v76a")
+item_4/text = "UV Test"
+item_4/icon = ExtResource("7_tp173")
 
 [connection signal="pressed" from="AreaTop/GridContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="AreaTop/GridContainer/LoadButton" to="." method="_on_load_button_pressed"]
-[connection signal="pressed" from="AreaBottom/ToolsContainer/ToolBlock" to="." method="_on_tool_block_pressed"]
-[connection signal="pressed" from="AreaBottom/ToolsContainer/ToolFace" to="." method="_on_tool_face_pressed"]
+[connection signal="item_selected" from="AreaBottom/ToolsList" to="." method="_on_tools_list_item_selected"]
+[connection signal="item_selected" from="AreaRight/TexturesList" to="." method="_on_textures_list_item_selected"]

@@ -5,10 +5,10 @@ class_name UserInterface extends Control
 @export var _text_box: LineEdit
 @export var _button_save: Button
 @export var _button_load: Button
-@export var _button_tool_block: Button
-@export var _button_tool_face: Button
+@export var _tool_list: ItemList
+@export var _texture_list: ItemList
 
-@onready var _ui_items = [_text_box, _button_save, _button_load, _button_tool_block, _button_tool_face]
+@onready var _ui_items = [_text_box, _button_save, _button_load, _tool_list, _texture_list]
 
 var save_path = "user://variable.save"
 
@@ -49,14 +49,32 @@ func load_data():
 	else:
 		print("No Data loaded")
 
+
 func _on_save_button_pressed():
 	save_data()
+
 
 func _on_load_button_pressed():
 	load_data()
 
-func _on_tool_block_pressed():
-	_user_interaction.set_tool("ToolBlock")
 
-func _on_tool_face_pressed():
-	_user_interaction.set_tool("ToolFace")
+func _on_tools_list_item_selected(index):
+	match index:
+		0:
+			_user_interaction.set_tool("ToolBlock")
+		1:
+			_user_interaction.set_tool("ToolFace")
+
+
+func _on_textures_list_item_selected(index):
+	match index:
+		0:
+			_user_interaction.set_texture(1)
+		1:
+			_user_interaction.set_texture(2)
+		2:
+			_user_interaction.set_texture(3)
+		3:
+			_user_interaction.set_texture(4)
+		4:
+			_user_interaction.set_texture(5)

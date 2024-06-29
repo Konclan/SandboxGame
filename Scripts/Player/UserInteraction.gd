@@ -9,6 +9,7 @@ const RANGE = 20
 @export var _user_interface: Control
 
 var tool := String("")
+var texture := 1
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -53,7 +54,7 @@ func primary_action(cast):
 			"ToolBlock":
 				ChunkManager.instance.set_brush(Vector3i(brush_position), BrushManager.instance.Air)
 			"ToolFace":
-				ChunkManager.instance.set_brush_texture_face(Vector3i(brush_position), cast.normal, 2)
+				ChunkManager.instance.set_brush_texture_face(Vector3i(brush_position), cast.normal, texture)
 
 
 func secondary_action(cast):
@@ -63,7 +64,7 @@ func secondary_action(cast):
 			"ToolBlock":
 				ChunkManager.instance.set_brush(Vector3i(brush_position + cast.normal), Brush.new())
 			"ToolFace":
-				ChunkManager.instance.set_brush_texture_face(Vector3i(brush_position), cast.normal, 3)
+				pass
 
 func get_cursor_pos_3d():
 	if _user_interface.mouse_over_ui():
@@ -84,5 +85,9 @@ func get_cursor_pos_3d():
 	return result
 
 
-func set_tool(t: String):
+func set_tool(t: String) -> void:
 	tool = t
+
+
+func set_texture(t: int) -> void:
+	texture = t
