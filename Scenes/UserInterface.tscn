@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://Scripts/Player/UserInterface.gd" id="1_agtbr"]
 [ext_resource type="Texture2D" uid="uid://ckg1hiots1h58" path="res://icon.svg" id="2_e12ga"]
-[ext_resource type="Texture2D" uid="uid://bmxvx33ynaqmd" path="res://Assets/Textures/default.png" id="2_v6kwd"]
 [ext_resource type="Texture2D" uid="uid://rpr4sx8qicvd" path="res://Assets/Textures/brick.png" id="3_7wq5y"]
+[ext_resource type="Texture2D" uid="uid://bmxvx33ynaqmd" path="res://Assets/Textures/nodraw.png" id="3_do358"]
 [ext_resource type="Texture2D" uid="uid://dt8ywwfyaq83k" path="res://Assets/Textures/concrete_floor.png" id="4_k35un"]
 [ext_resource type="Texture2D" uid="uid://c6jvo0beqcl1i" path="res://Assets/Textures/plaster_ceiling.png" id="5_1v76a"]
 [ext_resource type="Texture2D" uid="uid://b7q82hnn6ucd1" path="res://Assets/Textures/uv_test.png" id="7_tp173"]
@@ -145,8 +145,8 @@ grow_horizontal = 2
 grow_vertical = 2
 auto_height = true
 item_count = 5
-item_0/text = "None"
-item_0/icon = ExtResource("2_v6kwd")
+item_0/text = "Nodraw"
+item_0/icon = ExtResource("3_do358")
 item_1/text = "Brick"
 item_1/icon = ExtResource("3_7wq5y")
 item_2/text = "Concrete Tiles"

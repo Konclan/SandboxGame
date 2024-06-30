@@ -1,22 +1,17 @@
 shader_type spatial;
 render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
 
-uniform vec4 albedo : source_color;
-uniform sampler2D texture_albedo : source_color,filter_nearest,repeat_enable;
+uniform sampler2DArray texture_array_albedo : source_color, filter_nearest, repeat_enable;
 
-uniform vec2 atlas_size;
-varying vec2 offset;
+varying flat int array_index;
 
 void vertex() {
-	offset = CUSTOM0.xy;
+	array_index = int(CUSTOM0.x);
 }
 
 void fragment() {
 	vec2 base_uv = UV;
-	
-	// Mod the uv and add offset
-	vec2 mod_uv = vec2(mod(base_uv, vec2(1.000, 1.000) / atlas_size)) + (offset / atlas_size);
-	
-	vec4 albedo_tex = texture(texture_albedo,mod_uv);
-	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	vec3 mod_uv = vec3(base_uv.xy, float(array_index));
+	vec4 albedo_tex = texture(texture_array_albedo, mod_uv);
+	ALBEDO = albedo_tex.rgb;
 }

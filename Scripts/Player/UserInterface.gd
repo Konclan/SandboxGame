@@ -69,12 +69,12 @@ func _on_tools_list_item_selected(index):
 func _on_textures_list_item_selected(index):
 	match index:
 		0:
-			_user_interaction.set_texture(1)
+			_user_interaction.set_material("mat_nodraw")
 		1:
-			_user_interaction.set_texture(2)
+			_user_interaction.set_material("mat_brick")
 		2:
-			_user_interaction.set_texture(3)
+			_user_interaction.set_material("mat_concrete_floor")
 		3:
-			_user_interaction.set_texture(4)
+			_user_interaction.set_material("mat_plaster_ceiling")
 		4:
-			_user_interaction.set_texture(5)
+			_user_interaction.set_material("mat_uv_test")

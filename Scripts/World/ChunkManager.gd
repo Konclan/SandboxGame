@@ -43,17 +43,16 @@ func update_chunk_position(chunk: Chunk , current_position: Vector3i, previous_p
 	_position_to_chunk[current_position] = chunk
 
 
-func set_brush(global_position: Vector3i, brush: Brush):
+func set_brush(global_position: Vector3i, brush: Brush) -> void:
 	var chunk_tile_position = Vector3i(floori(global_position.x / float(Chunk.DIM.x)), floori(global_position.y / float(Chunk.DIM.y)), floori(global_position.z / float(Chunk.DIM.z)))
 
 	if _position_to_chunk.has(chunk_tile_position):
 		var chunk = _position_to_chunk.get(chunk_tile_position)
 		chunk.set_brush(Vector3i(Vector3(global_position) - chunk.global_position), brush)
 
-
-func set_brush_texture_face(global_position: Vector3i, normal: Vector3i, texture_index: int):
+func set_brush_face_material(global_position: Vector3i, normal: Vector3, material_id: String):
 	var chunk_tile_position = Vector3i(floori(global_position.x / float(Chunk.DIM.x)), floori(global_position.y / float(Chunk.DIM.y)), floori(global_position.z / float(Chunk.DIM.z)))
 
 	if _position_to_chunk.has(chunk_tile_position):
 		var chunk = _position_to_chunk.get(chunk_tile_position)
-		chunk.set_brush_face_texture(Vector3i(Vector3(global_position) - chunk.global_position), Vector3i(normal), texture_index)
+		chunk.set_brush_face_material(Vector3i(Vector3(global_position) - chunk.global_position), normal, material_id)

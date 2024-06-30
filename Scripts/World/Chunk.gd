@@ -64,7 +64,7 @@ func update():
 
 func greedy_mesh() -> Mesh:
 	_surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	_surface_tool.set_material(BrushManager.instance.chunk_material)
+	_surface_tool.set_material(MaterialManager.instance.chunk_material)
 	_surface_tool.set_custom_format(0, SurfaceTool.CUSTOM_RG_FLOAT)
 	
 		# Sweep over each axis (X, Y and Z)
@@ -73,6 +73,7 @@ func greedy_mesh() -> Mesh:
 		var u = (d + 1) % 3
 		var v = (d + 2) % 3
 		var pos = Vector3()
+		# q is current direction
 		var q = Vector3()
 		q[d] = 1
 		
@@ -96,9 +97,11 @@ func greedy_mesh() -> Mesh:
 					if bool(blockCurrent) == bool(blockCompare):
 						mask[n] = 0
 					elif bool(blockCurrent):
-						mask[n] = _brushes[pos.x][pos.y][pos.z].get_texture_index_from_normal(q) + 1
+						var material = _brushes[pos.x][pos.y][pos.z].get_face_from_normal(q).material
+						mask[n] = MaterialManager.instance.get_material_index(material) + 1
 					else:
-						mask[n] = -(_brushes[pos.x + q.x][pos.y + q.y][pos.z + q.z].get_texture_index_from_normal(-q) + 1)
+						var material = _brushes[pos.x + q.x][pos.y + q.y][pos.z + q.z].get_face_from_normal(-q).material
+						mask[n] = -(MaterialManager.instance.get_material_index(material) + 1)
 						
 					n += 1
 			
@@ -177,33 +180,27 @@ func greedy_mesh() -> Mesh:
 	
 	return _surface_tool.commit()
 
-func new_quad(point_1: Vector3, point_2: Vector3, point_3: Vector3, point_4: Vector3, texture_index: int):
-	var brush_texture = BrushManager.instance.brush_textures[texture_index - 1]
-	
-	var texture_position = BrushManager.instance.get_texture_atlas_position(brush_texture) as Vector2
-	var texture_atlas_size = BrushManager.instance.texture_atlas_size
-	
+func new_quad(point_1: Vector3, point_2: Vector3, point_3: Vector3, point_4: Vector3, material_index: int):
+
+	var index = material_index - 1
 	var normal = Vector3(point_3-point_1).cross(Vector3(point_2-point_1)).normalized()
+	
 	var width = (point_2 - point_1).length()
 	var height = (point_4 - point_1).length()
 	
 	var triangle1: Array[Vector3] = [point_1, point_2, point_3]
 	var triangle2: Array[Vector3] = [point_1, point_3, point_4]
 	
-	var uvOffset = texture_position / texture_atlas_size
-	var uvWidth = (1.0 / texture_atlas_size.x) * width
-	var uvHeight = (1.0 / texture_atlas_size.y) * height
-	
-	var uvA = uvOffset + Vector2(0, 0)
-	var uvB = uvOffset + Vector2(uvWidth, 0)
-	var uvC = uvOffset + Vector2(uvWidth, uvHeight)
-	var uvD = uvOffset + Vector2(0, uvHeight)
+	var uvA = Vector2(0, 0)
+	var uvB = Vector2(width, 0)
+	var uvC = Vector2(width, height)
+	var uvD = Vector2(0, height)
 	
 	var uv_triangle1: Array[Vector2] = [uvA, uvB, uvC]
 	var uv_triangle2: Array[Vector2] = [uvA, uvC, uvD]
 	
 	_surface_tool.set_normal(normal)
-	_surface_tool.set_custom(0, Color(int(texture_position.x), int(texture_position.y), 0.0, 0.0))
+	_surface_tool.set_custom(0, Color(index, 0.0, 0.0, 0.0))
 	_surface_tool.add_triangle_fan(triangle1, uv_triangle1)
 	_surface_tool.add_triangle_fan(triangle2, uv_triangle2)
 	
@@ -214,10 +211,13 @@ func is_solid(pos: Vector3i) -> bool:
 func set_brush(brush_position: Vector3i, brush: Brush):
 	_brushes[brush_position.x][brush_position.y][brush_position.z] = brush
 	update()
-	
-func set_brush_face_texture(brush_position: Vector3i, normal: Vector3i, texture_index: int):
+
+
+func set_brush_face_material(brush_position: Vector3i, normal: Vector3, material_id: String):
 	var brush: Brush = _brushes[brush_position.x][brush_position.y][brush_position.z]
-	brush.set_texture_from_normal(normal, BrushManager.instance.brush_textures[texture_index])
+	var face = brush.get_face_from_normal(normal)
+	var material = MaterialManager.instance.get_material(material_id)
+	face.material = material
 	
 	update()
 

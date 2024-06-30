@@ -1,43 +1,38 @@
 class_name Brush extends Resource
 # A generic voxel box where each face texture can be changed
 
-var front_texture: Texture2D = BrushManager.instance.brush_textures[2]
-var back_texture: Texture2D = BrushManager.instance.brush_textures[2]
-var left_texture: Texture2D = BrushManager.instance.brush_textures[2]
-var right_texture: Texture2D = BrushManager.instance.brush_textures[2]
-var top_texture: Texture2D = BrushManager.instance.brush_textures[3]
-var bottom_texture: Texture2D = BrushManager.instance.brush_textures[4]
+class face extends Resource:
+	var normal: Vector3
+	var material: BMaterial
+	
+	func _init(normal: Vector3, material: BMaterial):
+		self.normal = normal
+		self.material = material
 
-var textures: Array[Texture2D] = [
-	front_texture,
-	back_texture,
-	left_texture,
-	right_texture,
-	top_texture,
-	bottom_texture,
+var face_front: face = face.new(Vector3.FORWARD, MaterialManager.instance.get_material("mat_nodraw"))
+var face_back: face = face.new(Vector3.BACK, MaterialManager.instance.get_material("mat_nodraw"))
+var face_left: face = face.new(Vector3.LEFT, MaterialManager.instance.get_material("mat_nodraw"))
+var face_right: face = face.new(Vector3.RIGHT, MaterialManager.instance.get_material("mat_nodraw"))
+var face_top: face = face.new(Vector3.UP, MaterialManager.instance.get_material("mat_nodraw"))
+var face_bottom: face = face.new(Vector3.DOWN, MaterialManager.instance.get_material("mat_nodraw"))
+
+var _faces: Array[face] = [
+	face_front,
+	face_back,
+	face_left,
+	face_right,
+	face_top,
+	face_bottom,
 ]
 
-var faces = {
-	Vector3i.FORWARD: 0,
-	Vector3i.BACK: 1,
-	Vector3i.LEFT: 2,
-	Vector3i.RIGHT: 3,
-	Vector3i.UP: 4,
-	Vector3i.DOWN: 5,
-}
+var _face_lookup: Dictionary = {}
 
-func get_texture_from_normal(normal: Vector3i) -> Texture2D:
-	return textures[faces[normal]]
+func _init():
+	for face in _faces:
+		_face_lookup[face.normal] = face
 
-func set_texture_from_normal(normal: Vector3i, texture: Texture2D) -> void:
-	textures[faces[normal]] = texture
-	
-func set_texture_from_index(index: int, texture: Texture2D) -> void:
-	textures[index] = texture
-
-func get_texture_index_from_normal(normal: Vector3i) -> int:
-	var texture = textures[faces[normal]]
-	if texture:
-		return BrushManager.instance.get_texture_atlas_index(texture)
-	else:
-		return 0
+func get_face_from_normal(normal: Vector3) -> Resource:
+	var face = _face_lookup.get(normal)
+	if not face:
+		printerr("No face for normal: ", normal, _face_lookup)
+	return face

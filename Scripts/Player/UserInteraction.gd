@@ -8,8 +8,8 @@ const RANGE = 20
 @export var _block_highlight: MeshInstance3D
 @export var _user_interface: Control
 
-var tool := String("")
-var texture := 1
+var _tool := ""
+var _material := ""
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -50,17 +50,17 @@ func _process(_delta):
 func primary_action(cast):
 	if cast:
 		var brush_position = (cast.position - 0.5 * cast.normal).floor()
-		match tool:
+		match _tool:
 			"ToolBlock":
 				ChunkManager.instance.set_brush(Vector3i(brush_position), BrushManager.instance.Air)
 			"ToolFace":
-				ChunkManager.instance.set_brush_texture_face(Vector3i(brush_position), cast.normal, texture)
+				ChunkManager.instance.set_brush_face_material(Vector3i(brush_position), cast.normal, _material)
 
 
 func secondary_action(cast):
 	if cast:
 		var brush_position = (cast.position - 0.5 * cast.normal).floor()
-		match tool:
+		match _tool:
 			"ToolBlock":
 				ChunkManager.instance.set_brush(Vector3i(brush_position + cast.normal), Brush.new())
 			"ToolFace":
@@ -85,9 +85,9 @@ func get_cursor_pos_3d():
 	return result
 
 
-func set_tool(t: String) -> void:
-	tool = t
+func set_tool(tool: String) -> void:
+	_tool = tool
 
 
-func set_texture(t: int) -> void:
-	texture = t
+func set_material(material: String) -> void:
+	_material = material
