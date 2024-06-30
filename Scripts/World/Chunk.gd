@@ -184,8 +184,8 @@ func new_quad(point_1: Vector3, point_2: Vector3, point_3: Vector3, point_4: Vec
 	var texture_atlas_size = BrushManager.instance.texture_atlas_size
 	
 	var normal = Vector3(point_3-point_1).cross(Vector3(point_2-point_1)).normalized()
-	var width = (point_4 - point_1).length()
-	var height = (point_2 - point_1).length()
+	var width = (point_2 - point_1).length()
+	var height = (point_4 - point_1).length()
 	
 	var triangle1: Array[Vector3] = [point_1, point_2, point_3]
 	var triangle2: Array[Vector3] = [point_1, point_3, point_4]
@@ -195,9 +195,9 @@ func new_quad(point_1: Vector3, point_2: Vector3, point_3: Vector3, point_4: Vec
 	var uvHeight = (1.0 / texture_atlas_size.y) * height
 	
 	var uvA = uvOffset + Vector2(0, 0)
-	var uvB = uvOffset + Vector2(0, uvHeight)
+	var uvB = uvOffset + Vector2(uvWidth, 0)
 	var uvC = uvOffset + Vector2(uvWidth, uvHeight)
-	var uvD = uvOffset + Vector2(uvWidth, 0)
+	var uvD = uvOffset + Vector2(0, uvHeight)
 	
 	var uv_triangle1: Array[Vector2] = [uvA, uvB, uvC]
 	var uv_triangle2: Array[Vector2] = [uvA, uvC, uvD]
